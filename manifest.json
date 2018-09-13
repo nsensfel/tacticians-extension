@@ -1,0 +1,23 @@
+{
+
+   "name": "Tacticians Online - Active Battles",
+
+   "manifest_version": 1,
+   "version": "0.1",
+
+   "description":
+      "Regularly checks if it's your turn to play on Tacticians Online.",
+
+   "icons": {
+      "48": "images/to-favicon.svg",
+      "96": "images/to-favicon.svg"
+   },
+
+  "permissions": [ ],
+
+   "browser_action": {
+      "default_icon": "images/to-favicon.svg",
+      "default_title": "TO - Active Battles",
+      "default_popup": "www/index.html"
+   }
+}
