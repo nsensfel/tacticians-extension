@@ -15,4 +15,4 @@ import Struct.Model
 -- EXPORTED --------------------------------------------------------------------
 --------------------------------------------------------------------------------
 init : Struct.Flags.Type -> (Struct.Model.Type, (Cmd Struct.Event.Type))
-init flags = (Struct.Model.new flags)
+init flags = ((Struct.Model.new flags), Cmd.none)

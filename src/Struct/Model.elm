@@ -14,7 +14,6 @@ import Array
 import Struct.Flags
 import Struct.Error
 import Struct.Player
-import Struct.UI
 
 --------------------------------------------------------------------------------
 -- TYPES -----------------------------------------------------------------------
@@ -38,7 +37,7 @@ new flags =
    {
       flags = flags,
       error = Nothing,
-      players = (Array.new)
+      players = (Array.empty)
    }
 
 reset : Type -> Type

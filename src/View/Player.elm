@@ -77,20 +77,17 @@ get_html player =
                ]
                (
                   (List.map
-                     (get_item_html url_prefix)
-                     "campaign-link"
+                     (get_item_html url_prefix "campaign-link")
                      (Struct.Player.get_campaigns player)
                   )
                   ++
                   (List.map
-                     (get_item_html url_prefix)
-                     "invasion-link"
+                     (get_item_html url_prefix "invasion-link")
                      (Struct.Player.get_invasions player)
                   )
                   ++
                   (List.map
-                     (get_item_html url_prefix)
-                     "event-link"
+                     (get_item_html url_prefix "event-link")
                      (Struct.Player.get_events player)
                   )
                )

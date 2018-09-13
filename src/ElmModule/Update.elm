@@ -7,7 +7,6 @@ import Struct.Event
 import Struct.Model
 
 import Update.HandleServerReply
-import Update.SelectTab
 
 --------------------------------------------------------------------------------
 -- LOCAL -----------------------------------------------------------------------

@@ -4,13 +4,9 @@ module Update.HandleServerReply exposing (apply_to)
 import Http
 
 -- Shared ----------------------------------------------------------------------
-import Action.Ports
-
 import Struct.Flags
 
 -- Main Menu -------------------------------------------------------------------
-import Constants.IO
-
 import Struct.Error
 import Struct.Event
 import Struct.Model
@@ -24,40 +20,6 @@ import Struct.ServerReply
 --------------------------------------------------------------------------------
 -- LOCAL -----------------------------------------------------------------------
 --------------------------------------------------------------------------------
-disconnected : (
-      (Struct.Model.Type, (List (Cmd Struct.Event.Type))) ->
-      (Struct.Model.Type, (List (Cmd Struct.Event.Type)))
-   )
-disconnected current_state =
-   let (model, cmds) = current_state in
-      (
-         model,
-         [
-            (Action.Ports.go_to
-               (
-                  Constants.IO.base_url
-                  ++ "/login/?action=disconnect&goto="
-                  ++
-                  (Http.encodeUri
-                     (
-                        "/main-menu/?"
-                        ++ (Struct.Flags.get_params_as_url model.flags)
-                     )
-                  )
-               )
-            )
-         ]
-      )
-
-set_player : (
-      Struct.Player.Type ->
-      (Struct.Model.Type, (List (Cmd Struct.Event.Type))) ->
-      (Struct.Model.Type, (List (Cmd Struct.Event.Type)))
-   )
-set_player player current_state =
-   let (model, cmds) = current_state in
-      ({model | player = player}, cmds)
-
 apply_command : (
       Struct.ServerReply.Type ->
       (Struct.Model.Type, (List (Cmd Struct.Event.Type))) ->
@@ -65,8 +27,6 @@ apply_command : (
    )
 apply_command command current_state =
    case command of
-      Struct.ServerReply.Disconnected -> (disconnected current_state)
-      (Struct.ServerReply.SetPlayer player) -> (set_player player current_state)
       Struct.ServerReply.Okay -> current_state
 
 --------------------------------------------------------------------------------
