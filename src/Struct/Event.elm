@@ -6,7 +6,6 @@ import Http
 -- Main Menu -------------------------------------------------------------------
 import Struct.Error
 import Struct.ServerReply
-import Struct.UI
 
 --------------------------------------------------------------------------------
 -- TYPES -----------------------------------------------------------------------
@@ -15,7 +14,6 @@ type Type =
    None
    | Failed Struct.Error.Type
    | ServerReplied (Result Http.Error (List Struct.ServerReply.Type))
-   | TabSelected Struct.UI.Tab
 
 attempted : (Result.Result err val) -> Type
 attempted act =

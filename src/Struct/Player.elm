@@ -1,39 +1,34 @@
 module Struct.Player exposing
    (
       Type,
+      get_ix,
       get_id,
       get_username,
-      get_maps,
       get_campaigns,
       get_invasions,
       get_events,
-      get_roster_id,
-      get_inventory_id,
-      decoder,
-      none
+      set_battles,
+      has_active_battles
    )
 
 -- Elm -------------------------------------------------------------------------
 import Json.Decode
 import Json.Decode.Pipeline
 
--- Main Menu -------------------------------------------------------------------
+-- Extension -------------------------------------------------------------------
 import Struct.BattleSummary
-import Struct.MapSummary
 
 --------------------------------------------------------------------------------
 -- TYPES -----------------------------------------------------------------------
 --------------------------------------------------------------------------------
 type alias Type =
    {
+      ix : Int,
       id : String,
       name : String,
-      maps : (List Struct.MapSummary.Type),
       campaigns : (List Struct.BattleSummary.Type),
       invasions : (List Struct.BattleSummary.Type),
-      events : (List Struct.BattleSummary.Type),
-      roster_id : String,
-      inventory_id : String
+      events : (List Struct.BattleSummary.Type)
    }
 
 --------------------------------------------------------------------------------
@@ -43,14 +38,14 @@ type alias Type =
 --------------------------------------------------------------------------------
 -- EXPORTED --------------------------------------------------------------------
 --------------------------------------------------------------------------------
+get_ix : Type -> Int
+get_ix t = t.ix
+
 get_id : Type -> String
 get_id t = t.id
 
 get_username : Type -> String
 get_username t = t.name
-
-get_maps : Type -> (List Struct.MapSummary.Type)
-get_maps t = t.maps
 
 get_campaigns : Type -> (List Struct.BattleSummary.Type)
 get_campaigns t = t.campaigns
@@ -61,47 +56,29 @@ get_invasions t = t.invasions
 get_events : Type -> (List Struct.BattleSummary.Type)
 get_events t = t.events
 
-get_roster_id : Type -> String
-get_roster_id t = t.roster_id
-
-get_inventory_id : Type -> String
-get_inventory_id t = t.inventory_id
-
-decoder : (Json.Decode.Decoder Type)
-decoder =
-   (Json.Decode.Pipeline.decode
+set_battles : (
+      (List Struct.BattleSummary.Type) ->
+      (List Struct.BattleSummary.Type) ->
+      (List Struct.BattleSummary.Type) ->
+      Type ->
       Type
-      |> (Json.Decode.Pipeline.required "id" Json.Decode.string)
-      |> (Json.Decode.Pipeline.required "nme" Json.Decode.string)
-      |> (Json.Decode.Pipeline.required
-            "maps"
-            (Json.Decode.list Struct.MapSummary.decoder)
-         )
-      |> (Json.Decode.Pipeline.required
-            "cmps"
-            (Json.Decode.list Struct.BattleSummary.decoder)
-         )
-      |> (Json.Decode.Pipeline.required
-            "invs"
-            (Json.Decode.list Struct.BattleSummary.decoder)
-         )
-      |> (Json.Decode.Pipeline.required
-            "evts"
-            (Json.Decode.list Struct.BattleSummary.decoder)
-         )
-      |> (Json.Decode.Pipeline.required "rtid" Json.Decode.string)
-      |> (Json.Decode.Pipeline.required "ivid" Json.Decode.string)
    )
-
-none : Type
-none =
-   {
-      id = "",
-      name = "Unknown",
-      maps = [],
-      campaigns = [],
-      invasions = [],
-      events = [],
-      roster_id = "",
-      inventory_id = ""
+set_battles campaigns invasions events t =
+   {t |
+      campaigns =
+         (List.filter (Struct.BattleSummary.is_players_turn) campaigns),
+      invasions =
+         (List.filter (Struct.BattleSummary.is_players_turn) invasions),
+      events = (List.filter (Struct.BattleSummary.is_players_turn) events)
    }
+
+has_active_battles : Type -> Bool
+has_active_battles t =
+   (
+      (
+         (List.length t.campaigns)
+         + (List.length t.invasions)
+         + (List.length t.events)
+      )
+      > 0
+   )
