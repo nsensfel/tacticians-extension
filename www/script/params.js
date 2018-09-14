@@ -7,19 +7,7 @@ tacticians_online.params = new Object();
 
 tacticians_online.params.private = new Object();
 tacticians_online.params.private.frequency = 15;
-tacticians_online.params.private.players = [];
-
-tacticians_online.params.store =
-function ()
-{
-   localStorage.setItem
-   (
-      "frequency",
-      tacticians_online.params.private.frequency
-   );
-
-   localStorage.setItem("players", tacticians_online.params.private.players);
-}
+tacticians_online.params.private.players = "";
 
 tacticians_online.params.reset =
 function ()
@@ -43,7 +31,7 @@ function ()
 
    if (tacticians_online.params.private.players == null)
    {
-      tacticians_online.params.private.players = [];
+      tacticians_online.params.private.players = "";
    }
 }
 
@@ -63,29 +51,32 @@ tacticians_online.params.set_frequency =
 function (frequency)
 {
    tacticians_online.params.private.frequency = frequency;
+
+   localStorage.setItem
+   (
+      "frequency",
+      tacticians_online.params.private.frequency
+   );
 }
 
 tacticians_online.params.set_players =
 function (players)
 {
    tacticians_online.params.private.players = players;
+   localStorage.setItem("players", tacticians_online.params.private.players);
 }
 
-tacticians_online.params.store_new_params =
+tacticians_online.params.store_params =
 function (params)
 {
    var [frequency, players] = params;
    tacticians_online.params.set_frequency(frequency);
    tacticians_online.params.set_players(players);
-   tacticians_online.params.store();
 }
 
 tacticians_online.params.attach_to =
 function (app)
 {
-   app.ports.store_new_params.subscribe(
-      tacticians_online.params.store_new_params
-   );
-
+   app.ports.store_params.subscribe(tacticians_online.params.store_params);
    app.ports.reset_params.subscribe(tacticians_online.params.reset);
 }

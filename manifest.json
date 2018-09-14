@@ -19,5 +19,14 @@
       "default_icon": "images/to-favicon.svg",
       "default_title": "TO - Active Battles",
       "default_popup": "www/index.html"
+   },
+
+   "background": {
+      "scripts":
+         [
+            "www/script/params.js",
+            "www/script/main.js",
+            "www/script/load.js"
+         ]
    }
 }

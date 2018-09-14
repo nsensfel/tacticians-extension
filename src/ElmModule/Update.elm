@@ -7,6 +7,7 @@ import Struct.Event
 import Struct.Model
 
 import Update.HandleServerReply
+import Update.StoreParams
 
 --------------------------------------------------------------------------------
 -- LOCAL -----------------------------------------------------------------------
@@ -26,6 +27,11 @@ update event model =
    in
    case event of
       Struct.Event.None -> (model, Cmd.none)
+
+      (Struct.Event.SetUsername str) -> (model, Cmd.none)
+      (Struct.Event.SetID str) -> (model, Cmd.none)
+      (Struct.Event.SetURLPrefix str) -> (model, Cmd.none)
+      (Struct.Event.SetFrequency val) -> (Update.StoreParams.apply_to model)
 
       (Struct.Event.Failed err) ->
          (

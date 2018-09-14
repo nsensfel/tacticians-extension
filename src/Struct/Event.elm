@@ -13,6 +13,10 @@ import Struct.ServerReply
 type Type =
    None
    | Failed Struct.Error.Type
+   | SetUsername String
+   | SetID String
+   | SetURLPrefix String
+   | SetFrequency Int
    | ServerReplied (Result Http.Error (List Struct.ServerReply.Type))
 
 attempted : (Result.Result err val) -> Type

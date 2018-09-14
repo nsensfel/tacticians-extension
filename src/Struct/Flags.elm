@@ -17,7 +17,7 @@ import Util.List
 type alias Type =
    {
       frequency : Int,
-      players : (List String)
+      players : String
    }
 
 --------------------------------------------------------------------------------
@@ -30,5 +30,5 @@ type alias Type =
 get_frequency : Type -> Int
 get_frequency flags = flags.frequency
 
-get_players : Type -> (List String)
+get_players : Type -> String
 get_players flags = flags.players
