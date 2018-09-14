@@ -1,14 +1,13 @@
-module ElmModule.Init exposing (init)
+module Update.AddPlayer exposing (apply_to)
 
 -- Elm -------------------------------------------------------------------------
-import Delay
-
-import Time
+import Array
 
 -- Extension -------------------------------------------------------------------
 import Struct.Event
 import Struct.Flags
 import Struct.Model
+import Struct.Player
 
 --------------------------------------------------------------------------------
 -- LOCAL -----------------------------------------------------------------------
@@ -17,13 +16,9 @@ import Struct.Model
 --------------------------------------------------------------------------------
 -- EXPORTED --------------------------------------------------------------------
 --------------------------------------------------------------------------------
-init : Struct.Flags.Type -> (Struct.Model.Type, (Cmd Struct.Event.Type))
-init flags =
+apply_to : Struct.Model.Type -> (Struct.Model.Type, (Cmd Struct.Event.Type))
+apply_to model =
    (
-      (Struct.Model.new flags),
-      (Delay.after
-         (toFloat (Struct.Flags.get_frequency flags))
-         (Time.minute)
-         Struct.Event.ShouldRefresh
-      )
+      {model | players = (Array.push (Struct.Player.default) model.players)},
+      Cmd.none
    )

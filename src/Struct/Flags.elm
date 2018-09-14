@@ -6,10 +6,10 @@ module Struct.Flags exposing
    )
 
 -- Elm -------------------------------------------------------------------------
-import List
+import Json.Decode
 
--- Shared ----------------------------------------------------------------------
-import Util.List
+-- Extension -------------------------------------------------------------------
+import Struct.Player
 
 --------------------------------------------------------------------------------
 -- TYPES -----------------------------------------------------------------------
@@ -30,5 +30,13 @@ type alias Type =
 get_frequency : Type -> Int
 get_frequency flags = flags.frequency
 
-get_players : Type -> String
-get_players flags = flags.players
+get_players : Type -> (List Struct.Player.Type)
+get_players flags =
+   case
+      (Json.Decode.decodeString
+         (Json.Decode.list (Struct.Player.decoder))
+         flags.players
+      )
+   of
+      (Ok result) -> result
+      (Err _) -> []

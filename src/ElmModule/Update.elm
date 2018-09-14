@@ -6,7 +6,9 @@ module ElmModule.Update exposing (update)
 import Struct.Event
 import Struct.Model
 
+import Update.AddPlayer
 import Update.HandleServerReply
+import Update.RefreshBattles
 import Update.StoreParams
 
 --------------------------------------------------------------------------------
@@ -31,7 +33,13 @@ update event model =
       (Struct.Event.SetUsername str) -> (model, Cmd.none)
       (Struct.Event.SetID str) -> (model, Cmd.none)
       (Struct.Event.SetURLPrefix str) -> (model, Cmd.none)
-      (Struct.Event.SetFrequency val) -> (Update.StoreParams.apply_to model)
+      (Struct.Event.SetFrequency val) -> (model, Cmd.none)
+
+      Struct.Event.ShouldRefresh -> (Update.RefreshBattles.apply_to model)
+
+      Struct.Event.StoreParams -> (Update.StoreParams.apply_to model)
+
+      Struct.Event.AddPlayer -> (Update.AddPlayer.apply_to model)
 
       (Struct.Event.Failed err) ->
          (

@@ -19,13 +19,14 @@ get_item_html : (
       Struct.BattleSummary.Type ->
       (Html.Html Struct.Event.Type)
    )
-get_item_html url_prefix additional_class item =
+get_item_html query_url additional_class item =
    (Html.a
       [
          (Html.Attributes.class additional_class),
          (Html.Attributes.href
             (
-               url_prefix
+               query_url
+               ++ "/battle/?id="
                ++ (Struct.BattleSummary.get_id item)
             )
          )
@@ -56,7 +57,7 @@ get_item_html url_prefix additional_class item =
 get_html : Struct.Player.Type -> (Html.Html Struct.Event.Type)
 get_html player =
    let
-      url_prefix = (Struct.Player.get_url_prefix player)
+      query_url = (Struct.Player.get_query_url player)
    in
       (Html.div
          [
@@ -77,17 +78,17 @@ get_html player =
                ]
                (
                   (List.map
-                     (get_item_html url_prefix "campaign-link")
+                     (get_item_html query_url "campaign-link")
                      (Struct.Player.get_campaigns player)
                   )
                   ++
                   (List.map
-                     (get_item_html url_prefix "invasion-link")
+                     (get_item_html query_url "invasion-link")
                      (Struct.Player.get_invasions player)
                   )
                   ++
                   (List.map
-                     (get_item_html url_prefix "event-link")
+                     (get_item_html query_url "event-link")
                      (Struct.Player.get_events player)
                   )
                )

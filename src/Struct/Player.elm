@@ -1,24 +1,26 @@
 module Struct.Player exposing
    (
       Type,
-      get_ix,
-      set_ix,
       get_id,
       set_id,
-      get_url_prefix,
-      set_url_prefix,
+      get_query_url,
+      set_query_url,
       get_username,
       set_username,
       get_campaigns,
       get_invasions,
       get_events,
       set_battles,
-      has_active_battles
+      has_active_battles,
+      decoder,
+      encode,
+      default
    )
 
 -- Elm -------------------------------------------------------------------------
 import Json.Decode
 import Json.Decode.Pipeline
+import Json.Encode
 
 -- Extension -------------------------------------------------------------------
 import Struct.BattleSummary
@@ -28,10 +30,9 @@ import Struct.BattleSummary
 --------------------------------------------------------------------------------
 type alias Type =
    {
-      ix : Int,
       id : String,
       name : String,
-      url_prefix : String,
+      query_url : String,
       campaigns : (List Struct.BattleSummary.Type),
       invasions : (List Struct.BattleSummary.Type),
       events : (List Struct.BattleSummary.Type)
@@ -44,12 +45,6 @@ type alias Type =
 --------------------------------------------------------------------------------
 -- EXPORTED --------------------------------------------------------------------
 --------------------------------------------------------------------------------
-get_ix : Type -> Int
-get_ix t = t.ix
-
-set_ix : Int -> Type -> Type
-set_ix val t = {t | ix = val}
-
 get_id : Type -> String
 get_id t = t.id
 
@@ -62,11 +57,11 @@ get_username t = t.name
 set_username : String -> Type -> Type
 set_username str t = {t | name = str}
 
-get_url_prefix : Type -> String
-get_url_prefix t = t.url_prefix
+get_query_url : Type -> String
+get_query_url t = t.query_url
 
-set_url_prefix : String -> Type -> Type
-set_url_prefix str t = {t | url_prefix = str}
+set_query_url : String -> Type -> Type
+set_query_url str t = {t | query_url = str}
 
 get_campaigns : Type -> (List Struct.BattleSummary.Type)
 get_campaigns t = t.campaigns
@@ -103,3 +98,36 @@ has_active_battles t =
       )
       > 0
    )
+
+decoder : (Json.Decode.Decoder Type)
+decoder =
+   (Json.Decode.Pipeline.decode
+      Type
+      |> (Json.Decode.Pipeline.required "id" Json.Decode.string)
+      |> (Json.Decode.Pipeline.required "name" Json.Decode.string)
+      |> (Json.Decode.Pipeline.required "query_url" Json.Decode.string)
+      |> (Json.Decode.Pipeline.hardcoded [])
+      |> (Json.Decode.Pipeline.hardcoded [])
+      |> (Json.Decode.Pipeline.hardcoded [])
+   )
+
+encode : Type -> Json.Encode.Value
+encode t =
+   (Json.Encode.object
+      [
+         ("id", (Json.Encode.string t.id)),
+         ("name", (Json.Encode.string t.name)),
+         ("query_url", (Json.Encode.string t.query_url))
+      ]
+   )
+
+default : Type
+default =
+   {
+      id = "0",
+      name = "Username",
+      query_url = "http://127.0.0.1/",
+      campaigns = [],
+      invasions = [],
+      events = []
+   }

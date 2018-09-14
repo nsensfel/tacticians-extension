@@ -4,6 +4,7 @@ module ElmModule.View exposing (view)
 import Array
 
 import Html
+import Html.Events
 import Html.Attributes
 
 -- Extension -------------------------------------------------------------------
@@ -27,7 +28,7 @@ view model =
       [
          (Html.Attributes.class "fullscreen-module")
       ]
-      (
+      [
          (
             case model.error of
                Nothing -> (Util.Html.nothing)
@@ -38,8 +39,33 @@ view model =
                         (Html.text (Struct.Error.to_string err))
                      ]
                   )
+         ),
+         (Html.div
+            [
+            ]
+            (List.map (View.Player.get_html) (Array.toList model.players))
+         ),
+         (Html.div
+            [
+            ]
+            [
+               (Html.button
+                  [
+                     (Html.Events.onClick Struct.Event.AddPlayer)
+                  ]
+                  [
+                     (Html.text "Add Player")
+                  ]
+               ),
+               (Html.button
+                  [
+                     (Html.Events.onClick Struct.Event.StoreParams)
+                  ]
+                  [
+                     (Html.text "Save Params")
+                  ]
+               )
+            ]
          )
-         ::
-         (List.map (View.Player.get_html) (Array.toList model.players))
-      )
+      ]
    )

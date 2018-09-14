@@ -1,4 +1,4 @@
-module Comm.Okay exposing (decode)
+module Comm.Okay exposing (decoder)
 
 -- Elm -------------------------------------------------------------------------
 import Json.Decode
@@ -17,5 +17,5 @@ import Struct.ServerReply
 --------------------------------------------------------------------------------
 -- EXPORTED --------------------------------------------------------------------
 --------------------------------------------------------------------------------
-decode : (Json.Decode.Decoder Struct.ServerReply.Type)
-decode = (Json.Decode.succeed Struct.ServerReply.Okay)
+decoder : (Json.Decode.Decoder Struct.ServerReply.Type)
+decoder = (Json.Decode.succeed Struct.ServerReply.Okay)

@@ -5,8 +5,10 @@ import Json.Encode
 
 -- Extension -------------------------------------------------------------------
 import Comm.Send
+
 import Struct.Event
 import Struct.Model
+import Struct.Player
 
 --------------------------------------------------------------------------------
 -- TYPES ------------------------------------------------------------------------
@@ -31,11 +33,13 @@ try_encoding player_id model =
 --------------------------------------------------------------------------------
 -- EXPORTED --------------------------------------------------------------------
 --------------------------------------------------------------------------------
-try : Struct.Model.Type -> String -> (Maybe (Cmd Struct.Event.Type))
-try model player_id =
+try : Struct.Model.Type -> Struct.Player.Type -> (Maybe (Cmd Struct.Event.Type))
+try model player =
    (Comm.Send.try_sending
       model
-      -- FIXME: this is a param now...
-      Constants.IO.get_battles_handler
-      (try_encoding player_id)
+      (
+         (Struct.Player.get_query_url player)
+         ++ "/handler/player/plr_get_battles"
+      )
+      (try_encoding (Struct.Player.get_id player))
    )

@@ -1,12 +1,14 @@
 module Update.HandleServerReply exposing (apply_to)
 
 -- Elm -------------------------------------------------------------------------
+import Array
+
 import Http
 
--- Shared ----------------------------------------------------------------------
-import Struct.Flags
+-- Extension -------------------------------------------------------------------
+import Comm.GetBattles
 
--- Main Menu -------------------------------------------------------------------
+import Struct.BattleSummary
 import Struct.Error
 import Struct.Event
 import Struct.Model
@@ -20,6 +22,55 @@ import Struct.ServerReply
 --------------------------------------------------------------------------------
 -- LOCAL -----------------------------------------------------------------------
 --------------------------------------------------------------------------------
+handle_set_battles : (
+      (
+         (List Struct.BattleSummary.Type),
+         (List Struct.BattleSummary.Type),
+         (List Struct.BattleSummary.Type)
+      ) ->
+      (Struct.Model.Type, (List (Cmd Struct.Event.Type))) ->
+      (Struct.Model.Type, (List (Cmd Struct.Event.Type)))
+   )
+handle_set_battles battles current_state =
+   let
+      (model, cmds) = current_state
+      (campaigns, invasions, events) = battles
+   in
+      case (Array.get model.query_index model.players) of
+         Nothing -> current_state -- TODO: error
+         (Just player) ->
+            let
+               updated_player =
+                  (Struct.Player.set_battles
+                     campaigns
+                     invasions
+                     events
+                     player
+                  )
+               updated_model =
+                  {model |
+                     players =
+                        (Array.set
+                           model.query_index
+                           updated_player
+                           model.players
+                        ),
+                     query_index = (model.query_index + 1),
+                     notify =
+                        (
+                           model.notify
+                           || (Struct.Player.has_active_battles updated_player)
+                        )
+                  }
+            in
+               case (Array.get updated_model.query_index model.players) of
+                  Nothing -> ({updated_model| query_index = -1}, cmds)
+
+                  (Just next_player) ->
+                     case (Comm.GetBattles.try updated_model next_player) of
+                        Nothing -> ({updated_model| query_index = -1}, cmds)
+                        (Just query) -> (updated_model, (query :: cmds))
+
 apply_command : (
       Struct.ServerReply.Type ->
       (Struct.Model.Type, (List (Cmd Struct.Event.Type))) ->
@@ -28,6 +79,10 @@ apply_command : (
 apply_command command current_state =
    case command of
       Struct.ServerReply.Okay -> current_state
+      (Struct.ServerReply.SetID str) -> current_state -- TODO
+      (Struct.ServerReply.SetUsername str) -> current_state -- TODO
+      (Struct.ServerReply.SetBattles battles) ->
+         (handle_set_battles battles current_state)
 
 --------------------------------------------------------------------------------
 -- EXPORTED --------------------------------------------------------------------

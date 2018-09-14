@@ -2,8 +2,8 @@ module Struct.ServerReply exposing (Type(..))
 
 -- Elm -------------------------------------------------------------------------
 
--- Main Menu -------------------------------------------------------------------
-import Struct.Player
+-- -------------------------------------------------------------------
+import Struct.BattleSummary
 
 --------------------------------------------------------------------------------
 -- TYPES -----------------------------------------------------------------------
@@ -11,7 +11,14 @@ import Struct.Player
 
 type Type =
    Okay
---   | SetBattles (List, List, List)
+   | SetID String
+   | SetUsername String
+   | SetBattles
+      (
+         (List Struct.BattleSummary.Type),
+         (List Struct.BattleSummary.Type),
+         (List Struct.BattleSummary.Type)
+      )
 
 --------------------------------------------------------------------------------
 -- LOCAL -----------------------------------------------------------------------

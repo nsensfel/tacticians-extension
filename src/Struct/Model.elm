@@ -22,7 +22,9 @@ type alias Type =
    {
       flags: Struct.Flags.Type,
       error: (Maybe Struct.Error.Type),
-      players: (Array.Array Struct.Player.Type)
+      players: (Array.Array Struct.Player.Type),
+      query_index: Int,
+      notify: Bool
    }
 
 --------------------------------------------------------------------------------
@@ -37,13 +39,17 @@ new flags =
    {
       flags = flags,
       error = Nothing,
-      players = (Array.empty)
+      players = (Array.fromList (Struct.Flags.get_players flags)),
+      query_index = -1,
+      notify = False
    }
 
 reset : Type -> Type
 reset model =
    {model |
-      error = Nothing
+      error = Nothing,
+      notify = False,
+      query_index = -1
    }
 
 invalidate : Struct.Error.Type -> Type -> Type

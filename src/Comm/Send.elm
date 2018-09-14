@@ -24,8 +24,8 @@ import Struct.Model
 internal_decoder : String -> (Json.Decode.Decoder Struct.ServerReply.Type)
 internal_decoder reply_type =
    case reply_type of
-      "okay" -> (Comm.Okay.decode)
-      "set_battles" -> (Comm.SetBattles.decode)
+      "okay" -> (Comm.Okay.decoder)
+      "set_battles" -> (Comm.SetBattles.decoder)
       other ->
          (Json.Decode.fail
             (
@@ -35,15 +35,14 @@ internal_decoder reply_type =
             )
          )
 
-decode : (Json.Decode.Decoder Struct.ServerReply.Type)
-decode =
+decoder : (Json.Decode.Decoder Struct.ServerReply.Type)
+decoder =
    (Json.Decode.field "msg" Json.Decode.string)
    |> (Json.Decode.andThen (internal_decoder))
 
 --------------------------------------------------------------------------------
 -- EXPORTED --------------------------------------------------------------------
 --------------------------------------------------------------------------------
--- TODO: turn this into a multi-server version.
 try_sending : (
       Struct.Model.Type ->
       String ->
@@ -59,7 +58,7 @@ try_sending model recipient try_encoding_fun =
                (Http.post
                   recipient
                   (Http.jsonBody serial)
-                  (Json.Decode.list (decode))
+                  (Json.Decode.list (decoder))
                )
             )
          )
