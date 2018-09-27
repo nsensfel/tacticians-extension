@@ -74,9 +74,17 @@ function (params)
    tacticians_online.params.set_players(players);
 }
 
+tacticians_online.params.get_params =
+function ()
+{
+   return {get_frequency(), get_players()};
+}
+
 tacticians_online.params.attach_to =
 function (app)
 {
+   app.ports.get_params.subscribe(tacticians_online.params.get_params);
    app.ports.store_params.subscribe(tacticians_online.params.store_params);
    app.ports.reset_params.subscribe(tacticians_online.params.reset);
 }
+

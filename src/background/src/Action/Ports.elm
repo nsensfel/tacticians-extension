@@ -1,4 +1,4 @@
 port module Action.Ports exposing (..)
 
-port store_params : (Int, String) -> (Cmd msg)
-port reset_params : () -> (Cmd msg)
+port read_params : () -> (Cmd msg)
+port store_results : (String) -> (Cmd msg)
