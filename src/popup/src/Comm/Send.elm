@@ -8,7 +8,6 @@ import Json.Encode
 
 -- Extension -------------------------------------------------------------------
 import Comm.Okay
-import Comm.SetBattles
 
 import Struct.Event
 import Struct.ServerReply
@@ -25,7 +24,6 @@ internal_decoder : String -> (Json.Decode.Decoder Struct.ServerReply.Type)
 internal_decoder reply_type =
    case reply_type of
       "okay" -> (Comm.Okay.decoder)
-      "set_battles" -> (Comm.SetBattles.decoder)
       other ->
          (Json.Decode.fail
             (

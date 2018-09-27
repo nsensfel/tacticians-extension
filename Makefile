@@ -22,18 +22,18 @@ all: build
 
 build:
 	for module in $(MODULES_SRC) ; do \
-		$(MAKE) -C $$module build ; \
+		$(MAKE) -C $$module build WWW_DIR="$(WWW_DIR)"; \
 	done
 
 clean:
 	for module in $(MODULES_SRC) ; do \
-		$(MAKE) -C $$module clean ; \
+		$(MAKE) -C $$module clean WWW_DIR="$(WWW_DIR)"; \
 	done
 
 reset:
 	$(MAKE) clean
 	for module in $(MODULES_SRC) ; do \
-		$(MAKE) -C $$module reset; \
+		$(MAKE) -C $$module reset WWW_DIR="$(WWW_DIR)"; \
 	done
 
 ################################################################################

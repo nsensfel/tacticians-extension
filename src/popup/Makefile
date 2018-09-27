@@ -2,8 +2,7 @@
 ## CONFIG ######################################################################
 ################################################################################
 SRC_DIR ?= src
-WWW_DIR ?= www
-WWW_SCRIPT_DIR ?= $(WWW_DIR)/script
+TARGET_FILE ?= $(WWW_DIR)/script/main_popup.js
 
 ELM_CC ?= elm-make --warn
 
@@ -21,10 +20,10 @@ SUB_MODULES = $(shell find $(SRC_DIR) -type f | grep "elm$$")
 ################################################################################
 ## TARGET RULES ################################################################
 ################################################################################
-build: $(WWW_SCRIPT_DIR)/main.js
+build: $(TARGET_FILE)
 
 clean:
-	rm -f $(WWW_SCRIPT_DIR)/main.js
+	rm -f $(TARGET_FILE)
 
 reset:
 	rm -rf elm-stuff
@@ -32,5 +31,5 @@ reset:
 ################################################################################
 ## INTERNAL RULES ##############################################################
 ################################################################################
-$(WWW_SCRIPT_DIR)/main.js: $(MAIN_MODULE) $(SUB_MODULES)
+$(TARGET_FILE): $(MAIN_MODULE) $(SUB_MODULES)
 	$(ELM_CC) $(MAIN_MODULE) --output $@

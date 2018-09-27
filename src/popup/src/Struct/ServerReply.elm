@@ -13,12 +13,6 @@ type Type =
    Okay
    | SetID String
    | SetUsername String
-   | SetBattles
-      (
-         (List Struct.BattleSummary.Type),
-         (List Struct.BattleSummary.Type),
-         (List Struct.BattleSummary.Type)
-      )
 
 --------------------------------------------------------------------------------
 -- LOCAL -----------------------------------------------------------------------
