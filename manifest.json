@@ -22,11 +22,6 @@
    },
 
    "background": {
-      "scripts":
-         [
-            "www/script/params.js",
-            "www/script/main.js",
-            "www/script/load.js"
-         ]
+      "page": "www/index.html"
    }
 }

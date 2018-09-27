@@ -6,7 +6,7 @@ var tacticians_online = tacticians_online || new Object();
 tacticians_online.params = new Object();
 
 tacticians_online.params.private = new Object();
-tacticians_online.params.private.frequency = 15;
+tacticians_online.params.private.frequency = 1;
 tacticians_online.params.private.players = "";
 
 tacticians_online.params.reset =
@@ -26,7 +26,7 @@ function ()
 
    if (tacticians_online.params.private.frequency == null)
    {
-      tacticians_online.params.private.frequency = 15;
+      tacticians_online.params.private.frequency = 1;
    }
 
    if (tacticians_online.params.private.players == null)

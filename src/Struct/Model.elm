@@ -39,7 +39,11 @@ new flags =
    {
       flags = flags,
       error = Nothing,
-      players = (Array.fromList (Struct.Flags.get_players flags)),
+      players =
+         (Array.push
+            (Struct.Player.default)
+            (Array.fromList (Struct.Flags.get_players flags))
+         ),
       query_index = -1,
       notify = False
    }
