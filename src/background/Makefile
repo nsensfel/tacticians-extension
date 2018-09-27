@@ -1,15 +1,18 @@
 ################################################################################
 ## CONFIG ######################################################################
 ################################################################################
-MODULES ?= background popup
+SRC_DIR ?= src
+WWW_DIR ?= www
+WWW_SCRIPT_DIR ?= $(WWW_DIR)/script
 
-SRC_DIR ?= ${CURDIR}/src
-WWW_DIR ?= ${CURDIR}/www
+ELM_CC ?= elm-make --warn
+
+MAIN_MODULE ?= $(SRC_DIR)/Main.elm
 
 ################################################################################
 ## MAKEFILE MAGIC ##############################################################
 ################################################################################
-MODULES_SRC = $(addprefix $(SRC_DIR)/,$(MODULES))
+SUB_MODULES = $(shell find $(SRC_DIR) -type f | grep "elm$$")
 
 ################################################################################
 ## SANITY CHECKS ###############################################################
@@ -18,24 +21,16 @@ MODULES_SRC = $(addprefix $(SRC_DIR)/,$(MODULES))
 ################################################################################
 ## TARGET RULES ################################################################
 ################################################################################
-all: build
-
-build:
-	for module in $(MODULES_SRC) ; do \
-		$(MAKE) -C $$module build ; \
-	done
+build: $(WWW_SCRIPT_DIR)/main.js
 
 clean:
-	for module in $(MODULES_SRC) ; do \
-		$(MAKE) -C $$module clean ; \
-	done
+	rm -f $(WWW_SCRIPT_DIR)/main.js
 
 reset:
-	$(MAKE) clean
-	for module in $(MODULES_SRC) ; do \
-		$(MAKE) -C $$module reset; \
-	done
+	rm -rf elm-stuff
 
 ################################################################################
 ## INTERNAL RULES ##############################################################
 ################################################################################
+$(WWW_SCRIPT_DIR)/main.js: $(MAIN_MODULE) $(SUB_MODULES)
+	$(ELM_CC) $(MAIN_MODULE) --output $@
