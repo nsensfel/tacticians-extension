@@ -7,7 +7,6 @@ import Array
 import Comm.GetBattles
 
 import Struct.Event
-import Struct.Flags
 import Struct.Model
 
 --------------------------------------------------------------------------------

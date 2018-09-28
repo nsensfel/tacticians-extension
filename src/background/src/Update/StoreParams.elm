@@ -24,7 +24,7 @@ apply_to : Struct.Model.Type -> (Struct.Model.Type, (Cmd Struct.Event.Type))
 apply_to model =
    (
       model,
-      (Action.Ports.store_params
+      (Action.Ports.set_params
          (
             (Struct.Flags.get_frequency model.flags),
             (Json.Encode.encode

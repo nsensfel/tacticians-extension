@@ -66,7 +66,7 @@ function (players)
    localStorage.setItem("players", tacticians_online.params.private.players);
 }
 
-tacticians_online.params.store_params =
+tacticians_online.params.set_params =
 function (params)
 {
    var [frequency, players] = params;
@@ -74,17 +74,23 @@ function (params)
    tacticians_online.params.set_players(players);
 }
 
-tacticians_online.params.get_params =
+tacticians_online.params.js_get =
 function ()
 {
    return {get_frequency(), get_players()};
 }
 
+tacticians_online.params.get =
+function ()
+{
+   tacticians_online.app.params_in.send(tacticians_online.params.js_get());
+}
+
 tacticians_online.params.attach_to =
 function (app)
 {
-   app.ports.get_params.subscribe(tacticians_online.params.get_params);
-   app.ports.store_params.subscribe(tacticians_online.params.store_params);
+   app.ports.get_params.subscribe(tacticians_online.params.get);
+   app.ports.set_params.subscribe(tacticians_online.params.set);
    app.ports.reset_params.subscribe(tacticians_online.params.reset);
 }
 

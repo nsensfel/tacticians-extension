@@ -17,6 +17,13 @@ function (encoded_battles)
    localStorage.setItem("battles", encoded_battles);
 }
 
+tacticians_online.battles.read_battles =
+function ()
+{
+   tacticians_online.app.battles_in.send(tacticians_online.battles.get());
+}
+
+
 tacticians_online.battles.attach_to =
 function (app)
 {

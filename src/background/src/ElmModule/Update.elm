@@ -2,14 +2,12 @@ module ElmModule.Update exposing (update)
 
 -- Elm -------------------------------------------------------------------------
 
--- Main Menu -------------------------------------------------------------------
+-- Extension -------------------------------------------------------------------
 import Struct.Event
 import Struct.Model
 
-import Update.AddPlayer
 import Update.HandleServerReply
 import Update.RefreshBattles
-import Update.StoreParams
 
 --------------------------------------------------------------------------------
 -- LOCAL -----------------------------------------------------------------------
@@ -30,16 +28,9 @@ update event model =
    case event of
       Struct.Event.None -> (model, Cmd.none)
 
-      (Struct.Event.SetUsername str) -> (model, Cmd.none)
-      (Struct.Event.SetID str) -> (model, Cmd.none)
-      (Struct.Event.SetURLPrefix str) -> (model, Cmd.none)
-      (Struct.Event.SetFrequency val) -> (model, Cmd.none)
+      (Struct.Event.ReadParams (int, str)) -> (model, Cmd.none)
 
       Struct.Event.ShouldRefresh -> (Update.RefreshBattles.apply_to model)
-
-      Struct.Event.StoreParams -> (Update.StoreParams.apply_to model)
-
-      Struct.Event.AddPlayer -> (Update.AddPlayer.apply_to model)
 
       (Struct.Event.Failed err) ->
          (

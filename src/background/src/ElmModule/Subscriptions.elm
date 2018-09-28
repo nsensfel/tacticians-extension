@@ -2,7 +2,9 @@ module ElmModule.Subscriptions exposing (..)
 
 -- Elm -------------------------------------------------------------------------
 
--- Main Menu -------------------------------------------------------------------
+-- Extension -------------------------------------------------------------------
+import Action.Ports
+
 import Struct.Model
 import Struct.Event
 
@@ -14,4 +16,5 @@ import Struct.Event
 -- EXPORTED --------------------------------------------------------------------
 --------------------------------------------------------------------------------
 subscriptions : Struct.Model.Type -> (Sub Struct.Event.Type)
-subscriptions model = Sub.none
+subscriptions model =
+   (Action.Ports.params_in (\s -> (Struct.Event.ReadParams s)))
