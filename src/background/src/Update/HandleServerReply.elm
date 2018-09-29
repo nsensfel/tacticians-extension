@@ -83,8 +83,6 @@ apply_command : (
 apply_command command current_state =
    case command of
       Struct.ServerReply.Okay -> current_state
-      (Struct.ServerReply.SetID str) -> current_state -- TODO
-      (Struct.ServerReply.SetUsername str) -> current_state -- TODO
       (Struct.ServerReply.SetBattles battles) ->
          (handle_set_battles battles current_state)
 

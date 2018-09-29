@@ -1,29 +1,26 @@
-module Struct.BattleSummary exposing
+module Struct.Flags exposing
    (
       Type,
-      get_id,
-      get_name,
-      get_last_edit,
-      is_players_turn,
+      get_frequency,
+      get_players,
       decoder,
-      none
+      encode
    )
 
 -- Elm -------------------------------------------------------------------------
 import Json.Decode
-import Json.Decode.Pipeline
+import Json.Encode
 
--- Main Menu -------------------------------------------------------------------
+-- Extension -------------------------------------------------------------------
+import Struct.Player
 
 --------------------------------------------------------------------------------
 -- TYPES -----------------------------------------------------------------------
 --------------------------------------------------------------------------------
 type alias Type =
    {
-      id : String,
-      name : String,
-      last_edit : String,
-      is_players_turn : Bool
+      frequency : Int,
+      players : (List Struct.Player.Type)
    }
 
 --------------------------------------------------------------------------------
@@ -33,33 +30,28 @@ type alias Type =
 --------------------------------------------------------------------------------
 -- EXPORTED --------------------------------------------------------------------
 --------------------------------------------------------------------------------
-get_id : Type -> String
-get_id t = t.id
+get_frequency : Type -> Int
+get_frequency flags = flags.frequency
 
-get_name : Type -> String
-get_name t = t.name
-
-get_last_edit : Type -> String
-get_last_edit t = t.last_edit
-
-is_players_turn : Type -> Bool
-is_players_turn t = t.is_players_turn
+get_players : Type -> (List Struct.Player.Type)
+get_players flags = flags.players
 
 decoder : (Json.Decode.Decoder Type)
 decoder =
-   (Json.Decode.Pipeline.decode
+   (Json.Decode.map2
       Type
-      |> (Json.Decode.Pipeline.required "id" Json.Decode.string)
-      |> (Json.Decode.Pipeline.required "nme" Json.Decode.string)
-      |> (Json.Decode.Pipeline.required "ldt" Json.Decode.string)
-      |> (Json.Decode.Pipeline.required "ipt" Json.Decode.bool)
+      (Json.Decode.field "frequency" (Json.Decode.int))
+      (Json.Decode.field "players" (Json.Decode.list (Struct.Player.decoder)))
    )
 
-none : Type
-none =
-   {
-      id = "",
-      name = "Unknown",
-      last_edit = "Never",
-      is_players_turn = False
-   }
+encode : Type -> Json.Encode.Value
+encode flags =
+   (Json.Encode.object
+      [
+         ("frequency", (Json.Encode.int flags.frequency)),
+         (
+            "players",
+            (Json.Encode.list (List.map (Struct.Player.encode) flags.players))
+         )
+      ]
+   )

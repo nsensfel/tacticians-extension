@@ -6,6 +6,7 @@ module Struct.BattleSummary exposing
       get_last_edit,
       is_players_turn,
       decoder,
+      encode,
       none
    )
 
@@ -13,7 +14,9 @@ module Struct.BattleSummary exposing
 import Json.Decode
 import Json.Decode.Pipeline
 
--- Main Menu -------------------------------------------------------------------
+import Json.Encode
+
+-- Extension -------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
 -- TYPES -----------------------------------------------------------------------
@@ -53,6 +56,17 @@ decoder =
       |> (Json.Decode.Pipeline.required "nme" Json.Decode.string)
       |> (Json.Decode.Pipeline.required "ldt" Json.Decode.string)
       |> (Json.Decode.Pipeline.required "ipt" Json.Decode.bool)
+   )
+
+encode : Type -> Json.Encode.Value
+encode t =
+   (Json.Encode.object
+      [
+         ("id", (Json.Encode.string t.id)),
+         ("nme", (Json.Encode.string t.name)),
+         ("ldt", (Json.Encode.string t.last_edit)),
+         ("ipt", (Json.Encode.bool t.is_players_turn))
+      ]
    )
 
 none : Type
