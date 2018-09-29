@@ -7,6 +7,8 @@ import Json.Encode
 
 import Http
 
+import List
+
 -- Extension -------------------------------------------------------------------
 import Action.Ports
 
@@ -34,20 +36,28 @@ maybe_update_storage model cmds =
    then
       cmds
    else
-      (
-         (Action.Ports.set_results
-            (Json.Encode.encode
-               0
-               (Json.Encode.list
-                  (List.map
-                     (Struct.Player.encode)
-                     (Array.toList model.players)
+      let
+         players_list = (Array.toList model.players)
+      in
+         (
+            (Action.Ports.set_results
+               (Json.Encode.encode
+                  0
+                  (Json.Encode.list
+                     (List.map (Struct.Player.encode) players_list)
                   )
                )
             )
+            ::
+            (
+               (
+                  if (List.any (Struct.Player.has_active_battles) players_list)
+                  then (Action.Ports.activate_notification ())
+                  else (Action.Ports.disable_notification ())
+               )
+               :: cmds
+            )
          )
-         :: cmds
-      )
 
 handle_set_battles : (
       (
