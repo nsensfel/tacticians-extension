@@ -1,10 +1,9 @@
-module Comm.Send exposing (try_sending)
+module Comm.Send exposing (commit)
 
 -- Elm -------------------------------------------------------------------------
 import Http
 
 import Json.Decode
-import Json.Encode
 
 -- Extension -------------------------------------------------------------------
 import Comm.Okay
@@ -12,7 +11,6 @@ import Comm.SetBattles
 
 import Struct.Event
 import Struct.ServerReply
-import Struct.Model
 
 --------------------------------------------------------------------------------
 -- TYPES -----------------------------------------------------------------------
@@ -43,24 +41,9 @@ decoder =
 --------------------------------------------------------------------------------
 -- EXPORTED --------------------------------------------------------------------
 --------------------------------------------------------------------------------
-try_sending : (
-      Struct.Model.Type ->
-      String ->
-      (Struct.Model.Type -> (Maybe Json.Encode.Value)) ->
-      (Maybe (Cmd Struct.Event.Type))
+commit : String -> (Cmd Struct.Event.Type)
+commit query =
+   (Http.send
+      Struct.Event.ServerReplied
+      (Http.get query (Json.Decode.list (decoder)))
    )
-try_sending model recipient try_encoding_fun =
-   case (try_encoding_fun model) of
-      (Just serial) ->
-         (Just
-            (Http.send
-               Struct.Event.ServerReplied
-               (Http.post
-                  recipient
-                  (Http.jsonBody serial)
-                  (Json.Decode.list (decoder))
-               )
-            )
-         )
-
-      Nothing -> Nothing

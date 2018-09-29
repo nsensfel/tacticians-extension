@@ -5,7 +5,6 @@ import Json.Decode
 
 -- Extension -------------------------------------------------------------------
 import Struct.BattleSummary
-import Struct.Player
 import Struct.ServerReply
 
 --------------------------------------------------------------------------------

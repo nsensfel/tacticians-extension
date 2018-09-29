@@ -21,7 +21,4 @@ apply_to model =
    case (Array.get 0 model.players) of
       Nothing -> (model, Cmd.none)
       (Just player) ->
-         case (Comm.GetBattles.try model player) of
-            -- TODO: Invalidate only this player, refresh the others.
-            Nothing -> (model, Cmd.none)
-            (Just cmd) -> ({model | query_index = 0}, cmd)
+         ({model | query_index = 0}, (Comm.GetBattles.request player))

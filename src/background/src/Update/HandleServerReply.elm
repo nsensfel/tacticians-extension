@@ -67,9 +67,13 @@ handle_set_battles battles current_state =
                   Nothing -> ({updated_model| query_index = -1}, cmds)
 
                   (Just next_player) ->
-                     case (Comm.GetBattles.try updated_model next_player) of
-                        Nothing -> ({updated_model| query_index = -1}, cmds)
-                        (Just query) -> (updated_model, (query :: cmds))
+                     (
+                        updated_model,
+                        (
+                           (Comm.GetBattles.request next_player)
+                           :: cmds
+                        )
+                     )
 
 apply_command : (
       Struct.ServerReply.Type ->
