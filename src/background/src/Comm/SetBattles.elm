@@ -38,13 +38,13 @@ internal_decoder =
       )
    )
 
-to_server_reply : Battles -> Struct.ServerReply.Type
-to_server_reply t =
-   (Struct.ServerReply.SetBattles (t.campaigns, t.invasions, t.events))
+to_server_reply : Int -> Battles -> Struct.ServerReply.Type
+to_server_reply ix t =
+   (Struct.ServerReply.SetBattles (ix, t.campaigns, t.invasions, t.events))
 
 --------------------------------------------------------------------------------
 -- EXPORTED --------------------------------------------------------------------
 --------------------------------------------------------------------------------
-decoder : (Json.Decode.Decoder Struct.ServerReply.Type)
-decoder =
-   (Json.Decode.map (to_server_reply) (internal_decoder))
+decoder : Int -> (Json.Decode.Decoder Struct.ServerReply.Type)
+decoder ix =
+   (Json.Decode.map (to_server_reply ix) (internal_decoder))

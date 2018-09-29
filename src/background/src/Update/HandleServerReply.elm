@@ -3,10 +3,12 @@ module Update.HandleServerReply exposing (apply_to)
 -- Elm -------------------------------------------------------------------------
 import Array
 
+import Json.Encode
+
 import Http
 
 -- Extension -------------------------------------------------------------------
-import Comm.GetBattles
+import Action.Ports
 
 import Struct.BattleSummary
 import Struct.Error
@@ -22,8 +24,34 @@ import Struct.ServerReply
 --------------------------------------------------------------------------------
 -- LOCAL -----------------------------------------------------------------------
 --------------------------------------------------------------------------------
+maybe_update_storage : (
+      Struct.Model.Type ->
+      (List (Cmd Struct.Event.Type)) ->
+      (List (Cmd Struct.Event.Type))
+   )
+maybe_update_storage model cmds =
+   if (model.remaining_updates > 0)
+   then
+      cmds
+   else
+      (
+         (Action.Ports.set_results
+            (Json.Encode.encode
+               0
+               (Json.Encode.list
+                  (List.map
+                     (Struct.Player.encode)
+                     (Array.toList model.players)
+                  )
+               )
+            )
+         )
+         :: cmds
+      )
+
 handle_set_battles : (
       (
+         Int,
          (List Struct.BattleSummary.Type),
          (List Struct.BattleSummary.Type),
          (List Struct.BattleSummary.Type)
@@ -34,46 +62,41 @@ handle_set_battles : (
 handle_set_battles battles current_state =
    let
       (model, cmds) = current_state
-      (campaigns, invasions, events) = battles
+      (ix, campaigns, invasions, events) = battles
    in
-      case (Array.get model.query_index model.players) of
-         Nothing -> current_state -- TODO: error
+      case (Array.get ix model.players) of
+         Nothing ->
+            let
+               updated_model =
+                  {model | remaining_updates = (model.remaining_updates - 1)}
+            in
+               (
+                  updated_model,
+                  cmds
+               )
+
          (Just player) ->
             let
-               updated_player =
-                  (Struct.Player.set_battles
-                     campaigns
-                     invasions
-                     events
-                     player
-                  )
                updated_model =
                   {model |
+                     remaining_updates = (model.remaining_updates - 1),
                      players =
-                        (Array.set
-                           model.query_index
-                           updated_player
-                           model.players
-                        ),
-                     query_index = (model.query_index + 1),
-                     notify =
-                        (
-                           model.notify
-                           || (Struct.Player.has_active_battles updated_player)
+                     (Array.set
+                        ix
+                        (Struct.Player.set_battles
+                           campaigns
+                           invasions
+                           events
+                           player
                         )
+                        model.players
+                     )
                   }
             in
-               case (Array.get updated_model.query_index model.players) of
-                  Nothing -> ({updated_model| query_index = -1}, cmds)
-
-                  (Just next_player) ->
-                     (
-                        updated_model,
-                        (
-                           (Comm.GetBattles.request next_player)
-                           :: cmds
-                        )
-                     )
+               (
+                  updated_model,
+                  (maybe_update_storage model cmds)
+               )
 
 apply_command : (
       Struct.ServerReply.Type ->

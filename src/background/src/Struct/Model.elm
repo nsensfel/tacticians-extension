@@ -4,15 +4,16 @@ module Struct.Model exposing
       new,
       invalidate,
       reset,
-      clear_error
+      clear_error,
+      set_flags
    )
 
 -- Elm -------------------------------------------------------------------------
 import Array
 
 -- Extension -------------------------------------------------------------------
-import Struct.Flags
 import Struct.Error
+import Struct.Flags
 import Struct.Player
 
 --------------------------------------------------------------------------------
@@ -21,10 +22,9 @@ import Struct.Player
 type alias Type =
    {
       flags: Struct.Flags.Type,
-      error: (Maybe Struct.Error.Type),
       players: (Array.Array Struct.Player.Type),
-      query_index: Int,
-      notify: Bool
+      remaining_updates: Int,
+      error: (Maybe Struct.Error.Type)
    }
 
 --------------------------------------------------------------------------------
@@ -34,33 +34,31 @@ type alias Type =
 --------------------------------------------------------------------------------
 -- EXPORTED --------------------------------------------------------------------
 --------------------------------------------------------------------------------
+set_flags : Struct.Flags.Type -> Type -> Type
+set_flags flags t =
+   let
+      players_array = (Array.fromList (Struct.Flags.get_players flags))
+   in
+      {t |
+         flags = flags,
+         players = players_array,
+         remaining_updates = (Array.length players_array)
+      }
+
 new : Struct.Flags.Type -> Type
 new flags =
    {
       flags = flags,
-      error = Nothing,
-      players =
-         (Array.push
-            (Struct.Player.default)
-            (Array.fromList (Struct.Flags.get_players flags))
-         ),
-      query_index = -1,
-      notify = False
+      players = (Array.fromList (Struct.Flags.get_players flags)),
+      remaining_updates = 0,
+      error = Nothing
    }
 
 reset : Type -> Type
-reset model =
-   {model |
-      error = Nothing,
-      notify = False,
-      query_index = -1
-   }
+reset model = {model | error = Nothing}
 
 invalidate : Struct.Error.Type -> Type -> Type
-invalidate err model =
-   {model |
-      error = (Just err)
-   }
+invalidate err model = {model | error = (Just err)}
 
 clear_error : Type -> Type
 clear_error model = {model | error = Nothing}

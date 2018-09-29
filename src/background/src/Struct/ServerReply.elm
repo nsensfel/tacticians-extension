@@ -13,6 +13,7 @@ type Type =
    Okay
    | SetBattles
       (
+         Int,
          (List Struct.BattleSummary.Type),
          (List Struct.BattleSummary.Type),
          (List Struct.BattleSummary.Type)

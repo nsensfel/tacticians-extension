@@ -18,7 +18,14 @@ import Struct.Model
 --------------------------------------------------------------------------------
 apply_to : Struct.Model.Type -> (Struct.Model.Type, (Cmd Struct.Event.Type))
 apply_to model =
-   case (Array.get 0 model.players) of
-      Nothing -> (model, Cmd.none)
-      (Just player) ->
-         ({model | query_index = 0}, (Comm.GetBattles.request player))
+   (
+      model,
+      (Cmd.batch
+         (Array.toList
+            (Array.indexedMap
+               (Comm.GetBattles.request)
+               model.players
+            )
+         )
+      )
+   )

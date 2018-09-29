@@ -19,9 +19,10 @@ import Struct.Player
 --------------------------------------------------------------------------------
 -- EXPORTED --------------------------------------------------------------------
 --------------------------------------------------------------------------------
-request : Struct.Player.Type -> (Cmd Struct.Event.Type)
-request player =
+request : Int -> Struct.Player.Type -> (Cmd Struct.Event.Type)
+request ix player =
    (Comm.Send.commit
+      ix
       (
          (Struct.Player.get_query_url player)
          ++ "/handler/player/plr_get_battles?pid="

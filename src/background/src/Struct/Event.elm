@@ -5,6 +5,7 @@ import Http
 
 -- Main Menu -------------------------------------------------------------------
 import Struct.Error
+import Struct.Flags
 import Struct.ServerReply
 
 --------------------------------------------------------------------------------
@@ -13,7 +14,7 @@ import Struct.ServerReply
 type Type =
    None
    | Failed Struct.Error.Type
-   | ReadParams (Int, String)
+   | ReadParams (Struct.Flags.Type)
    | ShouldRefresh
    | ServerReplied (Result Http.Error (List Struct.ServerReply.Type))
 

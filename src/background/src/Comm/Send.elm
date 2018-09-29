@@ -19,11 +19,15 @@ import Struct.ServerReply
 --------------------------------------------------------------------------------
 -- LOCAL -----------------------------------------------------------------------
 --------------------------------------------------------------------------------
-internal_decoder : String -> (Json.Decode.Decoder Struct.ServerReply.Type)
-internal_decoder reply_type =
+internal_decoder : (
+      Int ->
+      String ->
+      (Json.Decode.Decoder Struct.ServerReply.Type)
+   )
+internal_decoder ix reply_type =
    case reply_type of
       "okay" -> (Comm.Okay.decoder)
-      "set_battles" -> (Comm.SetBattles.decoder)
+      "set_battles" -> (Comm.SetBattles.decoder ix)
       other ->
          (Json.Decode.fail
             (
@@ -33,17 +37,17 @@ internal_decoder reply_type =
             )
          )
 
-decoder : (Json.Decode.Decoder Struct.ServerReply.Type)
-decoder =
+decoder : Int -> (Json.Decode.Decoder Struct.ServerReply.Type)
+decoder ix =
    (Json.Decode.field "msg" Json.Decode.string)
-   |> (Json.Decode.andThen (internal_decoder))
+   |> (Json.Decode.andThen (internal_decoder ix))
 
 --------------------------------------------------------------------------------
 -- EXPORTED --------------------------------------------------------------------
 --------------------------------------------------------------------------------
-commit : String -> (Cmd Struct.Event.Type)
-commit query =
+commit : Int -> String -> (Cmd Struct.Event.Type)
+commit ix query =
    (Http.send
       Struct.Event.ServerReplied
-      (Http.get query (Json.Decode.list (decoder)))
+      (Http.get query (Json.Decode.list (decoder ix)))
    )

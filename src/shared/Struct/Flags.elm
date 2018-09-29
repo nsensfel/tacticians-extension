@@ -3,6 +3,7 @@ module Struct.Flags exposing
       Type,
       get_frequency,
       get_players,
+      default,
       decoder,
       encode
    )
@@ -35,6 +36,13 @@ get_frequency flags = flags.frequency
 
 get_players : Type -> (List Struct.Player.Type)
 get_players flags = flags.players
+
+default : Type
+default =
+   {
+      frequency = 1,
+      players = []
+   }
 
 decoder : (Json.Decode.Decoder Type)
 decoder =
