@@ -3,6 +3,8 @@ module Struct.Flags exposing
       Type,
       get_frequency,
       get_players,
+      set_frequency,
+      set_players,
       default,
       decoder,
       encode
@@ -36,6 +38,12 @@ get_frequency flags = flags.frequency
 
 get_players : Type -> (List Struct.Player.Type)
 get_players flags = flags.players
+
+set_frequency : Int -> Type -> Type
+set_frequency val flags = {flags | frequency = val}
+
+set_players : (List Struct.Player.Type) -> Type -> Type
+set_players val flags = {flags | players = val}
 
 default : Type
 default =

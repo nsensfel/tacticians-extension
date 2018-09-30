@@ -11,7 +11,6 @@ import Action.Ports
 import Struct.Event
 import Struct.Flags
 import Struct.Model
-import Struct.Player
 
 --------------------------------------------------------------------------------
 -- LOCAL -----------------------------------------------------------------------
@@ -25,12 +24,12 @@ apply_to model =
    (
       model,
       (Action.Ports.set_params
-         (
-            (Struct.Flags.get_frequency model.flags),
-            (Json.Encode.encode
-               0
-               (Json.Encode.list
-                  (List.map (Struct.Player.encode) (Array.toList model.players))
+         (Json.Encode.encode
+            0
+            (Struct.Flags.encode
+               (Struct.Flags.set_players
+                  (Array.toList model.players)
+                  model.flags
                )
             )
          )

@@ -4,14 +4,14 @@ import Html
 -- Map -------------------------------------------------------------------
 import Struct.Model
 import Struct.Event
-import Struct.Flags
+import Struct.ProgramInput
 
 import ElmModule.Init
 import ElmModule.Subscriptions
 import ElmModule.View
 import ElmModule.Update
 
-main : (Program Struct.Flags.Type Struct.Model.Type Struct.Event.Type)
+main : (Program Struct.ProgramInput.Type Struct.Model.Type Struct.Event.Type)
 main =
    (Html.programWithFlags
       {

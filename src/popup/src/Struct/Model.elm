@@ -22,9 +22,7 @@ type alias Type =
    {
       flags: Struct.Flags.Type,
       error: (Maybe Struct.Error.Type),
-      players: (Array.Array Struct.Player.Type),
-      query_index: Int,
-      notify: Bool
+      players: (Array.Array Struct.Player.Type)
    }
 
 --------------------------------------------------------------------------------
@@ -34,33 +32,19 @@ type alias Type =
 --------------------------------------------------------------------------------
 -- EXPORTED --------------------------------------------------------------------
 --------------------------------------------------------------------------------
-new : Struct.Flags.Type -> Type
-new flags =
+new : Struct.Flags.Type -> (List Struct.Player.Type) -> Type
+new flags players =
    {
       flags = flags,
       error = Nothing,
-      players =
-         (Array.push
-            (Struct.Player.default)
-            (Array.fromList (Struct.Flags.get_players flags))
-         ),
-      query_index = -1,
-      notify = False
+      players = (Array.fromList players)
    }
 
 reset : Type -> Type
-reset model =
-   {model |
-      error = Nothing,
-      notify = False,
-      query_index = -1
-   }
+reset model = {model | error = Nothing}
 
 invalidate : Struct.Error.Type -> Type -> Type
-invalidate err model =
-   {model |
-      error = (Just err)
-   }
+invalidate err model = {model | error = (Just err)}
 
 clear_error : Type -> Type
 clear_error model = {model | error = Nothing}
