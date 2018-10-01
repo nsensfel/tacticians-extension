@@ -82,7 +82,7 @@ handle_set_battles battles current_state =
             in
                (
                   updated_model,
-                  cmds
+                  (maybe_update_storage updated_model cmds)
                )
 
          (Just player) ->
@@ -105,7 +105,7 @@ handle_set_battles battles current_state =
             in
                (
                   updated_model,
-                  (maybe_update_storage model cmds)
+                  (maybe_update_storage updated_model cmds)
                )
 
 apply_command : (

@@ -50,7 +50,7 @@ new flags =
    {
       flags = flags,
       players = (Array.fromList (Struct.Flags.get_players flags)),
-      remaining_updates = 0,
+      remaining_updates = (List.length (Struct.Flags.get_players flags)),
       error = Nothing
    }
 

@@ -8,13 +8,13 @@ tacticians_online.notification = new Object();
 tacticians_online.notification.activate =
 function ()
 {
-   browser.browserAction.setIcon("images/to-favicon-notification.svg");
+   browser.browserAction.setBadgeText({text: "!"});
 }
 
 tacticians_online.notification.disable =
 function (encoded_notification)
 {
-   browser.browserAction.setIcon("images/to-favicon.svg");
+   browser.browserAction.setBadgeText({text: ""});
 }
 
 tacticians_online.notification.attach_to =
