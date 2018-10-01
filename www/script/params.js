@@ -8,7 +8,7 @@ tacticians_online.params = new Object();
 tacticians_online.params.get =
 function ()
 {
-   tacticians_online.app.params_in.send(localStorage.getItem("params"));
+   tacticians_online.app.ports.params_in.send(localStorage.getItem("params"));
 }
 
 tacticians_online.params.set =

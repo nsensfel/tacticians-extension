@@ -8,7 +8,7 @@ tacticians_online.battles = new Object();
 tacticians_online.battles.get =
 function ()
 {
-   tacticians_online.app.results_in.send(localStorage.getItem("battles"));
+   tacticians_online.app.ports.results_in.send(localStorage.getItem("battles"));
 }
 
 tacticians_online.battles.set =
