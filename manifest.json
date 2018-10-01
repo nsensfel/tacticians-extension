@@ -18,10 +18,10 @@
    "browser_action": {
       "default_icon": "images/to-favicon.svg",
       "default_title": "TO - Active Battles",
-      "default_popup": "www/index.html"
+      "default_popup": "www/popup.html"
    },
 
    "background": {
-      "page": "www/index.html"
+      "page": "www/background.html"
    }
 }

@@ -20,7 +20,7 @@ function (encoded_params)
 tacticians_online.params.get_value =
 function ()
 {
-   return localStorage.getItem("params");
+   return (localStorage.getItem("params") || "");
 }
 
 tacticians_online.params.attach_to =
